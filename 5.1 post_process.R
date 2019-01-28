@@ -4,4 +4,15 @@
 # then for the hotspot analysis
 # used for choose the target protein or hotspot based on p_value or closenss
 # the result can be used for the further analysis
-        
+
+#-----------------------------------------------------------------
+# hotspot: merege multiple file of hotspot analysis result into one
+#-----------------------------------------------------------------
+
+# Fistly obtain the directory which store the result for the hotspot analysis
+outfile0 <- "result/hotspot from pdb_ex for Wine"
+dir1 <- paste(getwd(), '/', outfile0, sep = "")
+mergeHotspt(infile=dir1, outfile=dir1)
+
+
+

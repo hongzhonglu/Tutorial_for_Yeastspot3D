@@ -1,14 +1,2 @@
 # load packages
 activeSite <- mergeActiveSiteInf()
-
-
-
-
-
-
-
-
-
-
-
-
