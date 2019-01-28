@@ -84,7 +84,10 @@ write.table(protein_mutation0,"result/protein_mutation0.txt", row.names = FALSE,
 
 
 
+#-----------------------------------------------------------------------------------------
 #analyze the mutation information with the structure
+#-----------------------------------------------------------------------------------------
+
 #first example
 ss = 'YPR184W'
 seq_from_3D <- 2:1534#this is the coordinated of original protein sequence and should changed into 3D structure coordinates
@@ -119,10 +122,22 @@ plotNullDistribution(wap_sample0, wap_original0 = wap_original)
 Strain_3D <- getPvalue(wap_original,wap_sample0)
 
 
+# print the mutation information for the input SNP list contained in the protein 3D structure
+pdbID <- '2_1534_5d06.1.A_5b2453487f4bf94bf75ead43'
+SNP_list <- printSNPforGene(gene0 = 'YPR184W',
+                SNPlist0 = mutated_gene1,
+                gene_annotation0 = gene_feature_GEM,
+                pdbID0 = pdbID,
+                sstart0 = 2,
+                send0 = 1534)
 
 
 
+
+
+#-------------------------------------------------------------------------------
 #second example
+#-------------------------------------------------------------------------------
 ss = 'YMR246W'
 seq_from_3D <- 39:691#this is the coordinated of original protein sequence and should changed into 3D structure coordinates
 dirForDistanceMatrix <- 'data/residue_distance/pdb_homo/39_691_5mst.1.A_5b41c4d68fd6f9da68b53e00.pdb.txt'
