@@ -1,0 +1,2 @@
+"cluster"	"closeness"	"pvalue"	"gene"	"seq_3D_origin"	"structure"	"seq_3D"	"stain_type"
+"L@@110;N@@190"	2.02099221499433	0.016	"YIL099W"	"72-545"	"72_545_1ayx.1.A_5b3e78761a200b9eb2cf7d72"	"NA-NA"	"PDETOH_high"
