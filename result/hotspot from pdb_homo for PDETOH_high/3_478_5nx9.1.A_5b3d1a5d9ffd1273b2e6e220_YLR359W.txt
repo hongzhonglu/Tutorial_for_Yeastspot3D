@@ -1,0 +1,2 @@
+"cluster"	"closeness"	"pvalue"	"gene"	"seq_3D_origin"	"structure"	"seq_3D"	"stain_type"
+"R@@371;N@@419"	2.0025825402572	0.0351	"YLR359W"	"3-478"	"3_478_5nx9.1.A_5b3d1a5d9ffd1273b2e6e220"	"NA-NA"	"PDETOH_high"

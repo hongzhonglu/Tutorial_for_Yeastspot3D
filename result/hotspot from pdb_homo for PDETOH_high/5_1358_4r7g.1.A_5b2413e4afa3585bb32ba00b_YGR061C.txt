@@ -1,0 +1,3 @@
+"cluster"	"closeness"	"pvalue"	"gene"	"seq_3D_origin"	"structure"	"seq_3D"	"stain_type"
+"V@@666;I@@894;D@@896"	3.03363702089843	2e-04	"YGR061C"	"5-1358"	"5_1358_4r7g.1.A_5b2413e4afa3585bb32ba00b"	"NA-NA"	"PDETOH_high"
+"I@@1019;P@@1019"	4	1	"YGR061C"	"5-1358"	"5_1358_4r7g.1.A_5b2413e4afa3585bb32ba00b"	"NA-NA"	"PDETOH_high"

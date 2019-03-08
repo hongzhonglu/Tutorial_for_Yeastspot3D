@@ -1,0 +1,2 @@
+"cluster"	"closeness"	"pvalue"	"gene"	"seq_3D_origin"	"structure"	"seq_3D"	"stain_type"
+"D@@193;S@@193"	4	1	"YDR487C"	"1-208"	"1_208_1tks.1.A_5b3f18019ffd124a5051d44d"	"NA-NA"	"PDETOH_high"

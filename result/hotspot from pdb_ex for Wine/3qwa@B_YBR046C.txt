@@ -1,0 +1,2 @@
+"cluster"	"closeness"	"pvalue"	"gene"	"seq_3D_origin"	"structure"	"seq_3D"	"stain_type"
+"I@@131;Y@@285;K@@287;V@@297"	4.00962128093402	0.0273	"YBR046C"	"3-333"	"3qwa@B"	"1-331"	"Wine"
