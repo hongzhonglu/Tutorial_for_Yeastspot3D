@@ -40,7 +40,7 @@ mutated_gene$Alt <- str_trim(mutated_gene$Alt, side = "both")
 #if mutation_position existed, get the mutated gene
 #input the mutated information of gene from different conditons or strains
 
-mutated_gene$complement_sign <- getSingleReactionFormula(gene_feature_GEM$complement_sign,gene_feature_GEM$locus_tag,mutated_gene$Gene2)
+mutated_gene$complement_sign <- getSingleMatchParameter(gene_feature_GEM$complement_sign,gene_feature_GEM$locus_tag,mutated_gene$Gene2)
 mutated_gene1 <- mutated_gene
 
 for (i in seq(length(mutated_gene1$Chr))){
@@ -76,8 +76,8 @@ num_nsSNP <- sum(num_gene_with_nsSNP)
 protein_mutation <- data.frame(orf=gene_list,nsSNP=tt)
 #import the annotation of these protein
 gene_annotation <- read.delim2("data/all_gene_yeast with annotation from different database.txt")
-protein_mutation$annotation_sgd <- getSingleReactionFormula(gene_annotation$annotation_SGD,gene_annotation$gene,protein_mutation$orf)
-protein_mutation$annotation_uni <- getSingleReactionFormula(gene_annotation$annotation_uniprot,gene_annotation$gene,protein_mutation$orf)
+protein_mutation$annotation_sgd <- getSingleMatchParameter(gene_annotation$annotation_SGD,gene_annotation$gene,protein_mutation$orf)
+protein_mutation$annotation_uni <- getSingleMatchParameter(gene_annotation$annotation_uniprot,gene_annotation$gene,protein_mutation$orf)
 protein_mutation0 <- protein_mutation[protein_mutation$nsSNP >= 4,]
 write.table(protein_mutation0,"result/protein_mutation0.txt", row.names = FALSE, sep = "\t" )
 
@@ -91,18 +91,19 @@ write.table(protein_mutation0,"result/protein_mutation0.txt", row.names = FALSE,
 #first example
 ss = 'YPR184W'
 seq_from_3D <- 2:1534#this is the coordinated of original protein sequence and should changed into 3D structure coordinates
-dirForDistanceMatrix <- 'data/residue_distance/pdb_homo/2_1534_5d06.1.A_5b2453487f4bf94bf75ead43.pdb.txt'
+dirForDistanceMatrix <- 'residue_distance/pdb_homo/2_1534_5d06.1.A_5b2453487f4bf94bf75ead43.pdb.txt'
 gene_snp <- getGeneCoordinate(gene_name = ss, genesum = gene_feature_GEM)
 gene_snp[['pro_mutation_count']] <- countMutationProtein(gene_name = ss, mutation_annotation=mutated_gene1, gene_snp0 = gene_snp)
 pos_mutation <- which(gene_snp[['pro_mutation_count']] != 0)
 
+#residue_distance/pdb_homo/2_1534_5d06.1.A_5b2453487f4bf94bf75ead43.pdb.txt
 
 #input the distance of all the pired residues
 #ResidueDistance <- read_excel(dirForDistanceMatrix,col_names = FALSE) #in the followed calculation, the matrix dosen't have the col and row names
 ResidueDistance <- read.table(dirForDistanceMatrix,sep = ",") #in the followed calculation, the matrix dosen't have the col and row names
 ResidueDistance <- as.matrix(ResidueDistance)
-
-
+dim(ResidueDistance)
+ResidueDistance[1:5,1:5]
 #obtain the mutation information for the structure
 residueIn3D <- gene_snp[['protein']][seq_from_3D]
 pos_mutation_3D <- gene_snp[['pro_mutation_count']][seq_from_3D]
@@ -134,13 +135,12 @@ SNP_list <- printSNPforGene(gene0 = 'YPR184W',
 
 
 
-
 #-------------------------------------------------------------------------------
 #second example
 #-------------------------------------------------------------------------------
 ss = 'YMR246W'
 seq_from_3D <- 39:691#this is the coordinated of original protein sequence and should changed into 3D structure coordinates
-dirForDistanceMatrix <- 'data/residue_distance/pdb_homo/39_691_5mst.1.A_5b41c4d68fd6f9da68b53e00.pdb.txt'
+dirForDistanceMatrix <- 'residue_distance/pdb_homo/39_691_5mst.1.A_5b41c4d68fd6f9da68b53e00.pdb.txt'
 gene_snp <- getGeneCoordinate(gene_name = ss, genesum = gene_feature_GEM)
 gene_snp[['pro_mutation_count']] <- countMutationProtein(gene_name = ss, mutation_annotation=mutated_gene1, gene_snp0 = gene_snp)
 pos_mutation <- which(gene_snp[['pro_mutation_count']] != 0)
