@@ -4,6 +4,8 @@
 
 # This funcion is used to obtain the resolution for the experimetal pdb files
 # the input should be a pdb file
+# it should be noted, different from experimental PDB files, the resolution of homology pdb files
+# represents the resolution of related templated PDB files
 pdb.ResolutionEX <- function(pdbdir) {
   # input a pdb file
   # output the resolution for the pdb file
@@ -19,6 +21,7 @@ pdb.ResolutionEX <- function(pdbdir) {
     str_extract(.,"\\d+\\.*\\d*")
   return(resolution)
 }
+
 
 #function to parse the pdb web to obtain the resolution for each pdb file
 # it can obtain resolution for the pdb file if it is stored in pdb database
@@ -38,6 +41,7 @@ pdb.ResolutionAll <- function(pdb0) {
   print(resolution)
   return(as.numeric(resolution))
 }
+
 
 # This function is used to extract the residue sequence from both experimental and homology pdb files
 library(bio3d)
@@ -76,6 +80,9 @@ pdb.Sequence <- function(pdbdir, pdbid) {
 
   return(seq_list)
 }
+
+
+
 # test
 # for experimental pdb files
 infile <- "data/"
@@ -109,7 +116,7 @@ for (i in seq_along(all_pdb_ex0)){
   pdb_ex_seq <- c(pdb_ex_seq, s1)
 }
 
-#save file to do the blast analysis
+# write and save file to do the blast analysis
 pdbid <- names(pdb_ex_seq)
 fileConn<-file("result/pdb_ex_seq_summary.txt", "w")
 for (i in 1:length(pdbid)){
@@ -153,6 +160,9 @@ write.table(blast_test, "result/blast for experiment pdb file using R.txt", row.
 
 
 
+
+
+
 # estimate the chainID for the experimental PDB files
 pdb_EX <- filter(meta_parameter_PDB_homo, provider=='PDB')
 pdb_EX$id_mapping <- paste(pdb_EX$UniProtKB_ac,pdb_EX$template, sep = "@")
@@ -192,7 +202,7 @@ blast_test <- blast_test %>% separate(query_id, into = c('PDBid','ChainID'), sep
 blast_test$id <- paste(blast_test$Entry,str_to_lower(blast_test$PDBid),blast_test$ChainID, sep = "@")
 # initial filter based on pidenty
 blast_test$perc_identity <- as.numeric(blast_test$perc_identity)
-blast_test <- filter(blast_test, perc_identity >=98)
+blast_test <- filter(blast_test, perc_identity >=50)
 
 # merge the blast information
 df_merged$pident2 <- getMultipleReactionFormula(blast_test$perc_identity,blast_test$id,df_merged$id_mapping_chain)
