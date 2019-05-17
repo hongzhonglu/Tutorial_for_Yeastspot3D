@@ -1,10 +1,20 @@
 # This function is used to calculate residue distance for all pdb file
+# Before conduct the CLUMPS and hotspot analysis, we need prepare the reliable residues distance for the
+# experiemtnal PDB files and homology PDB files
+
+
 library(bio3d)
 library(seqinr)
 #----------------------------------------------------------------------------
 # this code is used to calculate the distance
 #----------------------------------------------------------------------------
-pdb.ResidueDistance <- function(pdbdir,chainID) {
+pdb.ResidueDistance <- function (pdbdir,chainID) {
+  # input
+  #   pdbdir: dir for a pdb file
+  #   chainID: chainID for a chain
+  # output
+  #   k: a matrix
+
   pdb <- read.pdb(pdbdir)
   sele <- atom.select(pdb, type = "ATOM", "calpha", chain = chainID)
   pdb0 <- trim.pdb(pdb, sele)
@@ -27,13 +37,25 @@ pdb.ResidueDistance <- function(pdbdir,chainID) {
   return(k)
 }
 
+#----------------------------------------------------------------------------------
 # for the experimental pdb files
+#-----------------------------------------------------------------------------------
+# test
 infile <- "data/"
 pdbid <- '6cp6.pdb'
 pdbdir <- paste(infile, pdbid, sep = "")
 pdb.ResidueDistance(pdbdir, chainID = 'K')
+# loops for all experimental PDB files of high quality
 
+
+
+
+
+
+#--------------------------------------------------------------------------------------
 # for the homology pdb files
+#--------------------------------------------------------------------------------------
+# test
 infile <- "data/"
 pdbid <- "24_48_1cjy.1.A_5a7b71f67aaa0d57bdf20f14.pdb"
 pdbdir <- paste(infile, pdbid, sep = "")
@@ -47,3 +69,5 @@ dim(distance_test)
 distance_test[1:5, 1:5]
 typeof(distance_test)
 write.table(distance_test, 'result/2_1534_5d06.1.A_5b2453487f4bf94bf75ead43.pdb2.txt',row.names = FALSE, col.names = FALSE, sep = ",")
+# loops for the homology PDB files of high quality
+

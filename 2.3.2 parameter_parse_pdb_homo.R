@@ -80,12 +80,15 @@ all_homo_pdb_file <- all_homo_pdb_file[all_homo_pdb_file != "INDEX"]
 all_homo_pdb_file <- all_homo_pdb_file[all_homo_pdb_file != "INDEX.json"]
 all_homo_pdb_file <- all_homo_pdb_file[all_homo_pdb_file != "README"]
 
+
+# para0 is a list. For each small list, it is named by the pdbid name. Such a small list contained detailed parameter information
 para0 <- list()
 for (i in all_homo_pdb_file){
   print(i)
   #i <- '12_525_2vxo.1.A_5ad641817aaa0d2542ad2634.pdb'
   para0[[i]] <- pdb.AllParaHomo(file.path(dir0, i))
 }
+
 
 meta_parameter_PDB_homo$Seq_similarity <- NA
 meta_parameter_PDB_homo$Seq_identity <- NA
@@ -108,18 +111,21 @@ for (i in seq_along(ss0)) {
 
 
 # obtain resolution through web scrabing
-#remove some wrong id
+# remove some wrong id
 pdbid <- meta_parameter_PDB_homo$template
 pdbid1 <- str_split_fixed(pdbid, "\\.", 2)
 pdbid1 <- as.data.frame(pdbid1, stringsAsFactors=FALSE)
 meta_parameter_PDB_homo$pdb_id2 <- pdbid1$V1
 meta_parameter_PDB_homo$Resolution <- NA
-#Reading the HTML code from the website
-for (i in 1:nrow(meta_parameter_PDB_homo)) {
-  print(i)
-  pdb_name <- meta_parameter_PDB_homo$pdb_id2[i]
-  meta_parameter_PDB_homo$Resolution[i] <- pdb.ResolutionAll(pdb_name)
-}
+
+# In the normal process,
+# The resoultion was found based on the pdb id provided by PDB database
+# Here we firstly prepare the resolution for all the pdb files and save it for duplicated usage
+#for (i in 1:nrow(meta_parameter_PDB_homo)) {
+#  print(i)
+#  pdb_name <- meta_parameter_PDB_homo$pdb_id2[i]
+#  meta_parameter_PDB_homo$Resolution[i] <- pdb.ResolutionAll(pdb_name)
+#}
 
 
 #Input the prepare resolution data
