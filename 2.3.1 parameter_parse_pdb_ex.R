@@ -126,6 +126,13 @@ for (i in 1:length(pdbid)){
 }
 close(fileConn)
 
+
+
+
+
+
+
+
 #----------------------------------------------------------------------------
 # this code is used to blast analysis of amino acids
 #----------------------------------------------------------------------------
@@ -200,9 +207,11 @@ df_merged$id_mapping_chain <- paste(df_merged$id_mapping, df_merged$chain_new,se
 blast_test$Entry <- getSingleReactionFormula(uniprotGeneID_mapping$Entry, uniprotGeneID_mapping$GeneName,blast_test$subject_id)
 blast_test <- blast_test %>% separate(query_id, into = c('PDBid','ChainID'), sep = "\\.")
 blast_test$id <- paste(blast_test$Entry,str_to_lower(blast_test$PDBid),blast_test$ChainID, sep = "@")
-# initial filter based on pidenty
+# initial filter based on pidenty = 100
 blast_test$perc_identity <- as.numeric(blast_test$perc_identity)
-blast_test <- filter(blast_test, perc_identity >=50)
+blast_test <- filter(blast_test, perc_identity >=100)
+
+
 
 # merge the blast information
 df_merged$pident2 <- getMultipleReactionFormula(blast_test$perc_identity,blast_test$id,df_merged$id_mapping_chain)
@@ -216,16 +225,63 @@ df_merged$qend2 <- getMultipleReactionFormula(blast_test$q_end,blast_test$id,df_
 df_merged$sstart2 <- getMultipleReactionFormula(blast_test$s_start,blast_test$id,df_merged$id_mapping_chain)
 df_merged$send2 <- getMultipleReactionFormula(blast_test$s_end,blast_test$id,df_merged$id_mapping_chain)
 
-df_merged0 <- df_merged[is.na(df_merged$pident2),]
+df_merged0 <- df_merged[!is.na(df_merged$pident2),]
+
+#check whether id_mapping_chain has two mapped values in the pidenty
+df_duplicated <- df_merged0[which(str_detect(df_merged0$pident2, ";")),]
+df_no_duplicated <- df_merged0[which(!str_detect(df_merged0$pident2, ";")),]
+# split the df with duplicated value
+splitAndCombine0 <- function(gene, rxn, sep0) { ##one rxn has several genes, this function was used to splite the genes
+
+  gene <- str_split(gene, sep0)
+  tt<- length(gene)
+  gene0 <- list()
+  for (i in 1:tt){
+    gene0[[i]] <- paste(rxn[i], gene[[i]], sep = "@@@")
+
+  }
+
+  gene1 <- unlist(gene0)
+  gene2 <- str_split(gene1, "@@@" )
+  rxnGene <- data.frame(v1=character(length(gene2)),stringsAsFactors = FALSE)
+  tt1 <- length(gene2)
+  for (j in 1:tt1){
+    rxnGene$v1[j] <- gene2[[j]][2]
+    rxnGene$v2[j] <- gene2[[j]][1]
+  }
+
+  return(rxnGene)
+}
+df_split <- splitAndCombine0(df_duplicated$pident2,df_duplicated$id_mapping_chain, sep = ";")
+df_split1 <- splitAndCombine0(df_duplicated$qstart2,df_duplicated$id_mapping_chain, sep = ";")
+df_split2 <- splitAndCombine0(df_duplicated$qend2,df_duplicated$id_mapping_chain, sep = ";")
+df_split3 <- splitAndCombine0(df_duplicated$sstart2,df_duplicated$id_mapping_chain, sep = ";")
+df_split4 <- splitAndCombine0(df_duplicated$send2,df_duplicated$id_mapping_chain, sep = ";")
+
+colnames(df_split) <- c('pident2', 'id_mapping_chain')
+df_split$qstart2 <- df_split1$v1
+df_split$qend2 <- df_split2$v1
+df_split$sstart2 <- df_split3$v1
+df_split$send2 <- df_split4$v1
+# first remove the duplicated one
+df_split0 <- df_split %>%
+  unite("merge0", pident2, id_mapping_chain,qstart2,qend2,sstart2,send2,sep = "__")
+df_split$merge0 <- df_split0$merge0
+df_split <- df_split[!duplicated(df_split$merge0),]
+# add other information for the merge
+df_duplicated <- select(df_duplicated,-c('pident2','qstart2','qend2','sstart2','send2'))
+df_split <- select(df_split, -c("merge0"))
+
+df_duplicated0 <- right_join(df_duplicated, df_split, by = 'id_mapping_chain')
+df_duplicated0$mismatch2 <- 0
+colname0 <- colnames(df_no_duplicated)
+df_duplicated0 <- select(df_duplicated0,colname0)
+# merge and obtain a united dataframe for the experimental pdb files blast analysis
+pdb_ex_refine <- rbind.data.frame(df_no_duplicated, df_duplicated0)
 
 
-
-
-
-
-
-
-
+# save the result for the next use
+write.table(pdb_ex_refine, "data/pdb_ex_refine using R.txt", row.names = FALSE, sep = "\t")
 
 
 
