@@ -5,7 +5,78 @@
 # chr1      19971    C         T
 # chr1      19972    T         C
 
-#source('genome_annotation.R')
+
+# function need to adjusted:
+PositionResidueSNP <- function(mutatedPosition, alted, geneName, gene_feature) {
+  #mutatedPosition = 130975
+  #alted ='A'
+  #geneName = "YAL012W"
+  gene_snp <- getGeneCoordinate(gene_name = geneName, genesum = gene_feature)
+  mutation_position <- which(gene_snp[['gene_coordinate']]==mutatedPosition)
+
+  gene_snp[['gene']][mutation_position] <- alted
+
+  # translation
+  #library(seqinr)
+  realcds <- str_to_lower(paste(gene_snp[["gene"]], collapse = ""))
+  toycds <- s2c(realcds)
+  gene_snp[["protein_mutated"]] <- translate(seq = toycds)
+
+  # find the relative postion of mutated amino acids
+  aa_position <- which(gene_snp[["protein"]] != gene_snp[["protein_mutated"]])
+  aa_type <- gene_snp[["protein_mutated"]][aa_position]
+
+  # built the relation between aa_position and aa_type
+  # aa_postion and aa_type should contain one element
+  mutatedAA <- paste(aa_type, aa_position, sep = "@@") # this estabolish the relation between the postion and mutated amino acids
+  return(mutatedAA)
+}
+
+
+printSNPforGene <- function (gene0 = ss0, SNPlist0 = mutated_gene1, gene_annotation0 = gene_feature0,
+                             pdbID0 = pdbID, sstart0 = p1, send0 = p2)
+{
+  ss <- gene0
+  p3 <- paste(sstart0, send0, sep = "-")
+  seq_3D_origin <- sstart0:send0
+  pos_residue1 <- list()
+  for (j in 1:nrow(SNPlist0)) {
+    cat("Process all the SNPs from SNP list to obtain the SNP belong to the input gene:")
+    print(j)
+    pos_residue1[[j]] <- PositionResidueSNP(SNPlist0$Pos[j],
+                                            SNPlist0$Alt[j], ss, gene_feature = gene_annotation0)
+  }
+  pos_residue_df <- ResidueSum(pos_residue1)
+  gene_snp <- getGeneCoordinate(gene_name = ss, genesum = gene_annotation0)
+  gene_snp[["pro_coordinate"]] <- 1:length(gene_snp[["protein"]])
+  gene_snp[["residue"]] <- getMultipleReactionFormula(pos_residue_df$residue,
+                                                      pos_residue_df$pos, gene_snp[["pro_coordinate"]])
+  residue_3D <- gene_snp[["residue"]][seq_3D_origin]
+  residue_3D0 <- residue_3D[!is.na(residue_3D)]
+  residue_3D0 <- str_split(residue_3D0, ";")
+  residue_3D0 <- unlist(residue_3D0)
+  unique(residue_3D0)
+  tmp <- table(residue_3D0)
+  result <- as.data.frame(tmp)
+  result <- result %>% separate(., residue_3D0, into = c("alt",
+                                                         "position"), sep = "@@")
+  result$position <- as.numeric(result$position)
+  result <- result %>% arrange(., position)
+  gene_snp <- getGeneCoordinate(gene_name = ss, genesum = gene_annotation0)
+  result$ref <- getSingleReactionFormula(gene_snp[["protein"]],
+                                         gene_snp[["protein_coordinate"]], result$position)
+  result$orf <- ss
+  result$pdbID <- pdbID0
+  result <- select(result, orf, ref, position, alt, Freq, pdbID)
+  cat("The SNP summary:")
+  print(result)
+  result0 <- select(result, orf, ref, position, alt)
+  result0 <- result0 %>% unite(mutation, c("ref", "position",
+                                           "alt"), sep = "")
+  result$mutation <- result0$mutation
+  return(result)
+}
+
 
 #get the gene name
 #try to calculate the mutation on the amino acids based on the coordination on the chromosome
@@ -25,8 +96,8 @@ mutated_test0 <- filter(mutated_test, Gene2 != "INTERGENIC") ##filter the mutate
 #choose the metabolic gene
 #if the gene is type of "complement", then the complement_sign is "TRUE"
 #else the complement_sign is "FALSE"
-gene_feature_GEM$complement_sign <- str_detect(gene_feature_GEM$cds_location,"complement")
-index_m <- which(mutated_test0$Gene2 %in% gene_feature_GEM$locus_tag ==TRUE)
+gene_feature0$complement_sign <- str_detect(gene_feature0$cds_location,"complement")
+index_m <- which(mutated_test0$Gene2 %in% gene_feature0$locus_tag ==TRUE)
 mutated_gene <- mutated_test0[index_m,]
 
 
@@ -40,7 +111,7 @@ mutated_gene$Alt <- str_trim(mutated_gene$Alt, side = "both")
 #if mutation_position existed, get the mutated gene
 #input the mutated information of gene from different conditons or strains
 
-mutated_gene$complement_sign <- getSingleMatchParameter(gene_feature_GEM$complement_sign,gene_feature_GEM$locus_tag,mutated_gene$Gene2)
+mutated_gene$complement_sign <- getSingleMatchParameter(gene_feature0$complement_sign,gene_feature0$locus_tag,mutated_gene$Gene2)
 mutated_gene1 <- mutated_gene
 
 for (i in seq(length(mutated_gene1$Chr))){
@@ -63,7 +134,7 @@ gene_list  <- unique(mutated_gene1$Gene2)
 tt <- vector()
 for (i in seq_along(gene_list)) {
   ss <- gene_list[i]
-  gene_snp <- getGeneCoordinate(gene_name = ss, genesum = gene_feature_GEM)
+  gene_snp <- getGeneCoordinate(gene_name = ss, genesum = gene_feature0)
   gene_snp[["pro_mutation_count"]] <- countMutationProtein(gene_name = ss, mutation_annotation = mutated_gene1, gene_snp0 = gene_snp)
   tt[i] <- sum(gene_snp[["pro_mutation_count"]])
   print(gene_snp)
@@ -74,25 +145,17 @@ for (i in seq_along(gene_list)) {
 num_gene_with_nsSNP <- tt[tt > 0]
 num_nsSNP <- sum(num_gene_with_nsSNP)
 protein_mutation <- data.frame(orf=gene_list,nsSNP=tt)
-#import the annotation of these protein
-gene_annotation <- read.delim2("data/all_gene_yeast with annotation from different database.txt")
-protein_mutation$annotation_sgd <- getSingleMatchParameter(gene_annotation$annotation_SGD,gene_annotation$gene,protein_mutation$orf)
-protein_mutation$annotation_uni <- getSingleMatchParameter(gene_annotation$annotation_uniprot,gene_annotation$gene,protein_mutation$orf)
-protein_mutation0 <- protein_mutation[protein_mutation$nsSNP >= 4,]
-write.table(protein_mutation0,"result/protein_mutation0.txt", row.names = FALSE, sep = "\t" )
-
 
 
 
 #-----------------------------------------------------------------------------------------
 #analyze the mutation information with the structure
 #-----------------------------------------------------------------------------------------
-
 #first example
 ss = 'YPR184W'
 seq_from_3D <- 2:1534#this is the coordinated of original protein sequence and should changed into 3D structure coordinates
 dirForDistanceMatrix <- 'residue_distance/pdb_homo/2_1534_5d06.1.A_5b2453487f4bf94bf75ead43.pdb.txt'
-gene_snp <- getGeneCoordinate(gene_name = ss, genesum = gene_feature_GEM)
+gene_snp <- getGeneCoordinate(gene_name = ss, genesum = gene_feature0)
 gene_snp[['pro_mutation_count']] <- countMutationProtein(gene_name = ss, mutation_annotation=mutated_gene1, gene_snp0 = gene_snp)
 pos_mutation <- which(gene_snp[['pro_mutation_count']] != 0)
 
@@ -127,12 +190,10 @@ Strain_3D <- getPvalue(wap_original,wap_sample0)
 pdbID <- '2_1534_5d06.1.A_5b2453487f4bf94bf75ead43'
 SNP_list <- printSNPforGene(gene0 = 'YPR184W',
                 SNPlist0 = mutated_gene1,
-                gene_annotation0 = gene_feature_GEM,
+                gene_annotation0 = gene_feature0,
                 pdbID0 = pdbID,
                 sstart0 = 2,
                 send0 = 1534)
-
-
 
 
 #-------------------------------------------------------------------------------
@@ -141,7 +202,7 @@ SNP_list <- printSNPforGene(gene0 = 'YPR184W',
 ss = 'YMR246W'
 seq_from_3D <- 39:691#this is the coordinated of original protein sequence and should changed into 3D structure coordinates
 dirForDistanceMatrix <- 'residue_distance/pdb_homo/39_691_5mst.1.A_5b41c4d68fd6f9da68b53e00.pdb.txt'
-gene_snp <- getGeneCoordinate(gene_name = ss, genesum = gene_feature_GEM)
+gene_snp <- getGeneCoordinate(gene_name = ss, genesum = gene_feature0)
 gene_snp[['pro_mutation_count']] <- countMutationProtein(gene_name = ss, mutation_annotation=mutated_gene1, gene_snp0 = gene_snp)
 pos_mutation <- which(gene_snp[['pro_mutation_count']] != 0)
 

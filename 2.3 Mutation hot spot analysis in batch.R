@@ -29,6 +29,8 @@ preprocessSNP <- function(gene0, gene_feature) {
 
   return(mutated_gene0)
 }
+
+
 PositionResidueSNP <- function(mutatedPosition, alted, geneName, gene_feature) {
   #mutatedPosition = 130975
   #alted ='A'
