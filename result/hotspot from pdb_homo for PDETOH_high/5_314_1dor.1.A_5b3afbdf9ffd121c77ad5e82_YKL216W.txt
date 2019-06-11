@@ -1,2 +1,0 @@
-"cluster"	"closeness"	"pvalue"	"gene"	"seq_3D_origin"	"structure"	"seq_3D"	"stain_type"
-"S@@308;H@@308"	4	1	"YKL216W"	"5-314"	"5_314_1dor.1.A_5b3afbdf9ffd121c77ad5e82"	"NA-NA"	"PDETOH_high"
