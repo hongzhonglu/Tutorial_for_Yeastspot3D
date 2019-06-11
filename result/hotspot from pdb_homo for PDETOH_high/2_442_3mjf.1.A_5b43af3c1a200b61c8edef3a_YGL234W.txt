@@ -1,4 +1,0 @@
-"cluster"	"closeness"	"pvalue"	"gene"	"seq_3D_origin"	"structure"	"seq_3D"	"stain_type"
-"G@@91;R@@91"	4	1	"YGL234W"	"2-442"	"2_442_3mjf.1.A_5b43af3c1a200b61c8edef3a"	"NA-NA"	"PDETOH_high"
-"T@@212;I@@274"	2.00303205364462	0.0363	"YGL234W"	"2-442"	"2_442_3mjf.1.A_5b43af3c1a200b61c8edef3a"	"NA-NA"	"PDETOH_high"
-"I@@367;Y@@425"	2.05025332327882	0.0073	"YGL234W"	"2-442"	"2_442_3mjf.1.A_5b43af3c1a200b61c8edef3a"	"NA-NA"	"PDETOH_high"

@@ -1,3 +1,0 @@
-"cluster"	"closeness"	"pvalue"	"gene"	"seq_3D_origin"	"structure"	"seq_3D"	"stain_type"
-"A@@86;D@@187"	2.00271341632151	0.0465	"YPR191W"	"17-368"	"3cx5@M"	"1-352"	"Wine"
-"I@@134;S@@207"	2.04528582833892	0.0114	"YPR191W"	"17-368"	"3cx5@M"	"1-352"	"Wine"

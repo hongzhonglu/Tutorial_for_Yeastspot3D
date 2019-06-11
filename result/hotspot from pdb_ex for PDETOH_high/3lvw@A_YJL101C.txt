@@ -1,3 +1,3 @@
 "cluster"	"closeness"	"pvalue"	"gene"	"seq_3D_origin"	"structure"	"seq_3D"	"stain_type"
-"N@@551;R@@604"	2.08534943163972	0.0023	"YJL101C"	"2-669"	"3lvw@A"	"1-668"	"PDETOH_high"
+"N@@551;R@@604"	2.08534943163972	0.0044	"YJL101C"	"2-669"	"3lvw@A"	"1-668"	"PDETOH_high"
 "K@@641;M@@641"	4	1	"YJL101C"	"2-669"	"3lvw@A"	"1-668"	"PDETOH_high"

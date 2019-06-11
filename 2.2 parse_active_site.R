@@ -1,2 +1,0 @@
-# load packages
-activeSite <- mergeActiveSiteInf()

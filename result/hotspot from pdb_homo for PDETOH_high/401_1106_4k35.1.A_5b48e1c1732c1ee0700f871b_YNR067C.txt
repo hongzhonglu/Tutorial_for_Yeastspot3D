@@ -1,2 +1,0 @@
-"cluster"	"closeness"	"pvalue"	"gene"	"seq_3D_origin"	"structure"	"seq_3D"	"stain_type"
-"L@@476;I@@502"	2.03775185249392	0.0076	"YNR067C"	"401-1106"	"401_1106_4k35.1.A_5b48e1c1732c1ee0700f871b"	"NA-NA"	"PDETOH_high"
