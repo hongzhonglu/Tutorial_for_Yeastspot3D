@@ -42,6 +42,7 @@ for (i in 1:1047) {
   # step 1
   # preprocess the SNP information
   print(i)
+  i <-1
   ss <- pdb_Ex$locus[i]
   mutated_gene0 <- preprocessSNP(ss, gene_feature = gene_feature0)
   mutated_gene1 <- mutated_gene0[which(mutated_gene0$strain %in% strain_select1$Standardized_name), ]
