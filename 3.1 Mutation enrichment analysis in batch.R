@@ -27,7 +27,6 @@ print(outfile0)
 #main loop
 for (i in 1:1047) {
   print(i)
-  i <- 1
   ss0 <- pdb_Ex$locus[i]
   mutated_gene0 <- preprocessSNP(ss0,gene_feature = gene_feature0)
   mutated_gene1 <- mutated_gene0[which(mutated_gene0$strain %in% strain_select1$Standardized_name), ]
@@ -35,7 +34,7 @@ for (i in 1:1047) {
   p1 <- pdb_Ex$sstart2[i]
   p2 <- pdb_Ex$send2[i]
   distance_dir <- paste("residue_distance/pdb_ex/", pdbID, ".txt", sep = "")
-  result0 <- clumpsAnalysis(gene0 = ss0, SNPlist0 = mutated_gene1, gene_annotation0 = gene_feature0, pdb_dir = distance_dir, sstart0 = p1, send0 = p2)
+  result0 <- clumpsAnalysis(gene0 = ss0, SNPlist0 = mutated_gene1, gene_annotation0 = gene_feature0, pdb = distance_dir, sstart0 = p1, send0 = p2)
   pdb_Ex$p_value[i] <- result0
 }
 
