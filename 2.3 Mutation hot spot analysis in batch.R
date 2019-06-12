@@ -12,9 +12,6 @@ strain_select1 <- chooseStrain(type = "PDETOH_high")
 
 
 #------------batch process--------------------------------------------------------
-#------------new version----------------------------------------------------------
-#------------this version is used to preprocess data from 1011 project
-
 # step 0
 # input the gene information
 pdb_Ex <- read_excel("data/pdb_Ex refine for final residue distance calculation_manual check.xlsx")
