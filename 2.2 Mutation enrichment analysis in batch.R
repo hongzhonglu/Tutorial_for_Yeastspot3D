@@ -4,32 +4,6 @@
 #the SNP could be classified into nsSNP and sSNP
 #Only nsSNP is used to mapping onto protein 3D structure
 
-
-# function need to adjusted:
-preprocessSNP <- function(gene0, gene_feature) {
-  # inut a gene name,
-  # then the function will read all the SNP information for this gene
-  # output
-  # a dataframe contains each SNP information which including:
-  # chrosome, geneName, ref, alf and completment sign
-  infile <- paste("data/gene_snp/", gene0, sep = "")
-  mutated_test <- read.table(infile, header = FALSE, sep = "\t", stringsAsFactors = FALSE)
-  colnames(mutated_test) <- c("strain", "Gene2", "Chr", "Pos", "Ref", "Alt")
-  mutated_test$complement_sign <- getSingleReactionFormula(gene_feature$complement_sign, gene_feature$locus_tag, mutated_test$Gene2)
-  mutated_gene0 <- mutated_test
-  for (i in seq(length(mutated_gene0$Chr))) {
-    if (mutated_gene0$complement_sign[i]) {
-      mutated_gene0$Ref[i] <- changeATCG(mutated_gene0$Ref[i])
-      mutated_gene0$Alt[i] <- changeATCG(mutated_gene0$Alt[i])
-    } else {
-      mutated_gene0$Ref[i] <- mutated_gene0$Ref[i]
-      mutated_gene0$Alt[i] <- mutated_gene0$Alt[i]
-    }
-  }
-
-  return(mutated_gene0)
-}
-
 strain_classification <- read.table("data/strain_PDETOH_classification.txt", header = TRUE,stringsAsFactors = FALSE)
 strain_classification <- strain_classification[, c('strain_name','type')]
 strain_type <-"PDETOH_high"
