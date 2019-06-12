@@ -1,0 +1,3 @@
+"cluster"	"closeness"	"pvalue"	"gene"	"seq_3D_origin"	"structure"	"seq_3D"	"stain_type"
+"NA;NA"	2.02434546275882	0.018	"YPR191W"	"31-335"	"1ezv@B"	"1-305"	"PDETOH_high"
+"NA;NA;NA"	5.00529756695278	0.0463	"YPR191W"	"31-335"	"1ezv@B"	"1-305"	"PDETOH_high"

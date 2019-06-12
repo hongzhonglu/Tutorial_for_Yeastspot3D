@@ -1,0 +1,3 @@
+"cluster"	"closeness"	"pvalue"	"gene"	"seq_3D_origin"	"structure"	"seq_3D"	"stain_type"
+"NA;NA;NA;NA"	6.02860256743433	0.0012	"YBR046C"	"31-335"	"3qwb@A"	"1-305"	"PDETOH_high"
+"NA;NA;NA;NA"	4.04568869723084	0.0532	"YBR046C"	"31-335"	"3qwb@A"	"1-305"	"PDETOH_high"
