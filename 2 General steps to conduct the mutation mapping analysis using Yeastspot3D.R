@@ -2,7 +2,7 @@
 # This script is showing how to conduct the mutation mapping analysis for the small SNP dataset
 data('gene_feature0')
 data('snp_data')
-mutated_gene1 <- annotateSNP(snp_input = snp_data, gene_feature = gene_feature0)
+mutated_gene <- annotateSNP(snp_input = snp_data, gene_feature = gene_feature0)
 
 
 #-------------------------------------------------
@@ -10,6 +10,7 @@ mutated_gene1 <- annotateSNP(snp_input = snp_data, gene_feature = gene_feature0)
 #------------------------------------------------
 # first example
 data('ResidueDistance_YPR184W')
+mutated_gene1 <- filter(mutated_gene, Gene2 == 'YPR184W')
 result0 <- clumpsAnalysis(gene0 = 'YPR184W',
                           SNPlist0 = mutated_gene1,
                           gene_annotation0 = gene_feature0,
@@ -27,8 +28,10 @@ SNP_list <- printSNPforGene(gene0 = 'YPR184W',
                 sstart0 = 2,
                 send0 = 1534)
 
+
 # second example
 data('ResidueDistance_YMR246W')
+mutated_gene1 <- filter(mutated_gene, Gene2 == 'YMR246W')
 result0 <- clumpsAnalysis(gene0 = 'YMR246W',
                           SNPlist0 = mutated_gene1,
                           gene_annotation0 = gene_feature0,
@@ -36,6 +39,14 @@ result0 <- clumpsAnalysis(gene0 = 'YMR246W',
                           sstart0 = 39,
                           send0 = 691,
                           input_dir= FALSE)
+
+pdbID <- '39_691_5mst.1.A_5b41c4d68fd6f9da68b53e00'
+SNP_list <- printSNPforGene(gene0 = 'YMR246W',
+                            SNPlist0 = mutated_gene1,
+                            gene_annotation0 = gene_feature0,
+                            pdbID0 = pdbID,
+                            sstart0 = 39,
+                            send0 = 691)
 
 
 #-------------------------------------------------
