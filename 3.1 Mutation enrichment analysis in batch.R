@@ -33,7 +33,7 @@ for (i in 1:1047) {
   pdbID <- pdb_Ex$pdbid[i]
   p1 <- pdb_Ex$sstart2[i]
   p2 <- pdb_Ex$send2[i]
-  distance_dir <- paste("residue_distance/pdb_ex/", pdbID, ".txt", sep = "")
+  distance_dir <- paste("residue_distance/pdb_ex/", pdbID, ".txt", sep = "") # update the input dir for the residue distance matrix
   result0 <- clumpsAnalysis(gene0 = ss0, SNPlist0 = mutated_gene1, gene_annotation0 = gene_feature0, pdb = distance_dir, sstart0 = p1, send0 = p2)
   pdb_Ex$p_value[i] <- result0
 }
