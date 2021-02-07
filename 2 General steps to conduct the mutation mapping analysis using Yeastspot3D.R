@@ -70,3 +70,8 @@ hotSpotAnalysis(
   result_dir = outfile0,
   input_dir=FALSE
 )
+
+
+# here save the installed R packages and its version to make sure the above steps could be re-produced
+# library(hongR)
+# print_R_package(output = "data/R_packages_for_Yeastspot3D.txt")
